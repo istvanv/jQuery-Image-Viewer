@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Image Viewer Demo</title>
+        <meta name="description" content="">
+        <meta name="generator" content="Studio 3 http://aptana.com/">
+        <meta name="author" content="Istvan Vincze">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0">
+        
+        <link href='http://fonts.googleapis.com/css?family=Raleway:100&v2' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/imageviewer/style.css?v=2">
+    </head>
+    
+    <body>
+        <div>
+
+            <header>
+                <h1>Image Viewer Demo</h1>
+            </header>
+
+            <div>
+
+                <div class="image-viewer">
+                    <ul>
+                        <li><a href="/imageviewer/images/abstract-q-c-640-480-7.jpg"><img src="/imageviewer/images/abstract-q-c-640-480-7.jpg" alt="Alt text"></a></li>
+                        <li><a href="/imageviewer/images/animals-h-c-480-640-2.jpg"><img src="/imageviewer/images/animals-h-c-480-640-2.jpg" alt="Alt text"></a></li>
+                        <li><a href="/imageviewer/images/city-q-c-640-480-9.jpg"><img src="/imageviewer/images/city-q-c-640-480-9.jpg" alt="Alt text"></a></li>
+                        <li><a href="/imageviewer/images/food-h-c-480-640-1.jpg"><img src="/imageviewer/images/food-h-c-480-640-1.jpg" alt="Alt text"></a></li>
+                        <li><a href="/imageviewer/images/nightlife-q-c-640-480-5.jpg"><img src="/imageviewer/images/nightlife-q-c-640-480-5.jpg" alt="Alt text"></a></li>
+                    </ul>
+                    <figure></figure>
+                </div>
+
+            </div>
+
+        </div>
+        
+        <script src="/imageviewer/jquery.js"></script>
+        <script src="/imageviewer/imageviewer.js"></script>
+
+        <script>
+            $(function(){
+                $('.image-viewer').imageViewer();
+            });
+        </script>
+
+    </body>
+</html>
