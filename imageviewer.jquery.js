@@ -45,19 +45,20 @@
 
 
     var setAsSelected = function(args) {
-        var $this = args.el;
-        var settings = $this.data('imageViewer');
+        var $this = args.el,
+            settings = $this.data('imageViewer'),
+            $imageThumbs = args.selectorThumbs;
         
-        args.selectorThumbs.parents('li').removeClass('selected');
+        $imageThumbs.parents('li').removeClass('selected');
         args.thumbEl.parents('li').addClass('selected');
     };
 
 
 
     var switchImage = function(args) {
-        var $this = args.el;
-        var settings = $this.data('imageViewer');
-        
+        var $this = args.el,
+            settings = $this.data('imageViewer');
+
         settings.largeImageWrapper.css({ height : $('img:first', settings.largeImageWrapper).innerHeight() }); // So the imageWrapper doesn't collapse when image is removed.
 
         $(new Image())
@@ -94,50 +95,44 @@
 
                 var settings = {
                     largeImageWrapper   : 'figure',
-                    imageThumbs         : 'li img'
+                    imageThumbs         : 'li img',
+                    cycle               : true
                 };
 
                 if (options) $.extend(settings, options);
-
-                var $this                   = $(this);
+                
                 settings.largeImageWrapper  = $(settings.largeImageWrapper, this);
-                settings.imageThumbs        = $(settings.imageThumbs, this);
-                var $firstThumb             = settings.imageThumbs.first();
-                
-                $this.data('imageViewer', settings);
-                
-                // Attach event handling to control links
-                $this.find('.next, .previous, .first, .last').bind('click.imageViewer', function(e) {
-                    e.preventDefault();
+                var $this           = $(this),
+                    $imageThumbs    = $(settings.imageThumbs, this),
+                    $firstThumb     = $imageThumbs.first();
 
+                $this.data('imageViewer', settings);
+
+                // Attach event handling to control links
+                $this.find('.jiv-next, .jiv-previous, .jiv-first, .jiv-last').bind('click.imageViewer', function(e) {
+                    e.preventDefault();
                     var action = $(this).attr('class');
-                    
-                    //console.log('action: '+action);
-                    
-                    if (action == 'next') methods.loadNext.call($this);
-                    if (action == 'previous') methods.loadPrevious.call($this);
-                    if (action == 'first') methods.loadFirst.call($this);
-                    if (action == 'last') methods.loadLast.call($this);
+                    if (action == 'jiv-next') methods.loadNext.call($this);
+                    if (action == 'jiv-previous') methods.loadPrevious.call($this);
+                    if (action == 'jiv-first') methods.loadFirst.call($this);
+                    if (action == 'jiv-last') methods.loadLast.call($this);
                 });
 
 
                 // load first image
-                if (settings.largeImageWrapper.is(':empty')) {
-                    settings.largeImageWrapper.append('<img src="" alt="">');
-                }
+                if (settings.largeImageWrapper.is(':empty')) settings.largeImageWrapper.append('<img src="" alt="">');
                 methods.loadFirst.call($this);
 
 
                 // Attach event handling to thumbnails
-                settings.imageThumbs.parent('a').bind('click.imageViewer focus.imageViewer', function(e) {
-
+                $imageThumbs.parent('a').bind('click.imageViewer focus.imageViewer', function(e) {
                     e.preventDefault();
                     var $thumbEl = $(this).find('img');
                     if ($thumbEl.parents('li').hasClass('selected')) return false;
 
                     setAsSelected({
                         el : $this,
-                        selectorThumbs : settings.imageThumbs,
+                        selectorThumbs : $imageThumbs,
                         thumbEl : $thumbEl
                     });
 
@@ -147,84 +142,94 @@
                         largeImageAlt : ($thumbEl.attr('alt') == '') ? $thumbEl.attr('alt') : ''
                     });
                     
-                    $this.data('imageViewer').current = $thumbEl;
+                    settings.current = $thumbEl;
                 });
 
             });
         },
+
 
 
         loadNext : function() {
             return this.each(function() {
-                var $this = $(this), settings = $this.data('imageViewer');
-                
-                var theNext = $(settings.current, settings.imageThumbs).index() + 1;
-                
-                var $thumbEl = settings.imageThumbs[theNext];
+                var $this = $(this),
+                    settings = $this.data('imageViewer'),
+                    $imageThumbs = $(settings.imageThumbs, this),
+                    $thumbEl;
+                    
+                $imageThumbs.each(function(i,e) {
+                    if ($(this).is(settings.current)) $thumbEl = $($imageThumbs[i + 1]);
+                });
 
-                console.log('$thumbEl: ' + $thumbEl.attr('src'));
-
-                //var $thumbEl = settings.imageThumbs[settings.current].next();
-                
-
-                
-                if (!$thumbEl && settings.cycle) {
+                if (($thumbEl.length <= 0) && settings.cycle) {
                     methods.loadFirst.call($this);
+                    return false;
                 }
 
                 setAsSelected({
                     el : $this,
-                    selectorThumbs : settings.imageThumbs,
+                    selectorThumbs : $imageThumbs,
                     thumbEl : $thumbEl
                 });
-    
+
                 switchImage({
                     el : $this,
                     largeImageSrc : $thumbEl.parent('a').attr('href'),
                     largeImageAlt : ($thumbEl.attr('alt') == '') ? $thumbEl.attr('alt') : ''
                 });
-                
-                $this.data('imageViewer').current = $thumbEl;
+
+                settings.current = $thumbEl;
             });            
         },
 
 
+
         loadPrevious : function() {
             return this.each(function() {
-                var $this = $(this), settings = $this.data('imageViewer');
+                var $this = $(this),
+                    settings = $this.data('imageViewer'),
+                    $imageThumbs = $(settings.imageThumbs, this),
+                    $thumbEl;
+                
+                $imageThumbs.each(function(i,e) {
+                    if ($(this).is(settings.current)) $thumbEl = $($imageThumbs[i - 1]);
+                });
 
-                var $thumbEl = settings.imageThumbs[settings.current].prev();
-
-                if (!$thumbEl && settings.cycle) {
-                    methods.loadLast;
+                if (($thumbEl.length <= 0) && settings.cycle) {
+                    methods.loadLast.call($this);
+                    return false;
                 }
-
+                
                 setAsSelected({
                     el : $this,
-                    selectorThumbs : settings.imageThumbs,
+                    selectorThumbs : $imageThumbs,
                     thumbEl : $thumbEl
                 });
-    
+
                 switchImage({
                     el : $this,
                     largeImageSrc : $thumbEl.parent('a').attr('href'),
                     largeImageAlt : ($thumbEl.attr('alt') == '') ? $thumbEl.attr('alt') : ''
                 });
                 
-                $this.data('imageViewer').current = $thumbEl;
+                settings.current = $thumbEl;
             });
         },
+
 
 
         loadFirst : function() {
             return this.each(function() {
-                var $this = $(this), settings = $this.data('imageViewer'); 
-
-                var $thumbEl = settings.imageThumbs.first();
-
+                var $this = $(this),
+                    settings = $this.data('imageViewer'),
+                    $imageThumbs = $(settings.imageThumbs, this),
+                    $thumbEl = $imageThumbs.first();
+                
+                console.log('loadFirst');
+                
                 setAsSelected({
                     el : $this,
-                    selectorThumbs : settings.imageThumbs,
+                    selectorThumbs : $imageThumbs,
                     thumbEl : $thumbEl
                 });
     
@@ -234,20 +239,24 @@
                     largeImageAlt : ($thumbEl.attr('alt') == '') ? $thumbEl.attr('alt') : ''
                 });
                 
-                $this.data('imageViewer').current = $thumbEl;
+                settings.current = $thumbEl;
             });
         },
 
 
+
         loadLast : function() {
             return this.each(function() {
-                var $this = $(this), settings = $this.data('imageViewer');
-
-                var $thumbEl = settings.imageThumbs.last();
-
+                var $this = $(this),
+                    settings = $this.data('imageViewer'),
+                    $imageThumbs = $(settings.imageThumbs, this),
+                    $thumbEl = $imageThumbs.last();
+                
+                console.log('loadLast');
+                
                 setAsSelected({
                     el : $this,
-                    selectorThumbs : settings.imageThumbs,
+                    selectorThumbs : $imageThumbs,
                     thumbEl : $thumbEl
                 });
     
@@ -257,11 +266,12 @@
                     largeImageAlt : ($thumbEl.attr('alt') == '') ? $thumbEl.attr('alt') : ''
                 });
                 
-                $this.data('imageViewer').current = $thumbEl;
+                settings.current = $thumbEl;
             });
         }
 
     };
+
 
 
     // Plugin
