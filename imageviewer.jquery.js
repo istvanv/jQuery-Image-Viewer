@@ -96,11 +96,17 @@
                 var settings = {
                     largeImageWrapper   : 'figure',
                     imageThumbs         : 'li img',
+                    controls            : {
+                                        Next        : '.next',
+                                        Previous    : '.previous',
+                                        First       : '.first',
+                                        Last        : '.last'
+                                        },
                     cycle               : true
                 };
 
                 if (options) $.extend(settings, options);
-                
+
                 settings.largeImageWrapper  = $(settings.largeImageWrapper, this);
                 var $this           = $(this),
                     $imageThumbs    = $(settings.imageThumbs, this),
@@ -108,14 +114,9 @@
 
                 $this.data('imageViewer', settings);
 
-                // Attach event handling to control links
-                $this.find('.jiv-next, .jiv-previous, .jiv-first, .jiv-last').bind('click.imageViewer', function(e) {
-                    e.preventDefault();
-                    var action = $(this).attr('class');
-                    if (action == 'jiv-next') methods.loadNext.call($this);
-                    if (action == 'jiv-previous') methods.loadPrevious.call($this);
-                    if (action == 'jiv-first') methods.loadFirst.call($this);
-                    if (action == 'jiv-last') methods.loadLast.call($this);
+                // Attach controls
+                $.each(settings.controls, function(key,val) {
+                    methods.attachControl.call($this, { loadMethod : key, element : val });
                 });
 
 
@@ -150,6 +151,20 @@
 
 
 
+        attachControl : function(args) {
+            return this.each(function() {
+                var $this = $(this),
+                    settings = $this.data('imageViewer');
+                    
+                    $(args.element, $this).bind('click.imageViewer', function(e) {
+                        e.preventDefault();
+                        methods['load'+args.loadMethod].call($this);
+                    });
+            });
+        },
+
+
+
         loadNext : function() {
             return this.each(function() {
                 var $this = $(this),
@@ -161,7 +176,7 @@
                     if ($(this).is(settings.current)) $thumbEl = $($imageThumbs[i + 1]);
                 });
 
-                if (($thumbEl.length <= 0) && settings.cycle) {
+                if ((!$thumbEl || ($thumbEl.length < 0)) && settings.cycle) {
                     methods.loadFirst.call($this);
                     return false;
                 }
@@ -195,7 +210,7 @@
                     if ($(this).is(settings.current)) $thumbEl = $($imageThumbs[i - 1]);
                 });
 
-                if (($thumbEl.length <= 0) && settings.cycle) {
+                if ((!$thumbEl || ($thumbEl.length < 0)) && settings.cycle) {
                     methods.loadLast.call($this);
                     return false;
                 }
@@ -224,9 +239,7 @@
                     settings = $this.data('imageViewer'),
                     $imageThumbs = $(settings.imageThumbs, this),
                     $thumbEl = $imageThumbs.first();
-                
-                console.log('loadFirst');
-                
+
                 setAsSelected({
                     el : $this,
                     selectorThumbs : $imageThumbs,
@@ -251,9 +264,7 @@
                     settings = $this.data('imageViewer'),
                     $imageThumbs = $(settings.imageThumbs, this),
                     $thumbEl = $imageThumbs.last();
-                
-                console.log('loadLast');
-                
+
                 setAsSelected({
                     el : $this,
                     selectorThumbs : $imageThumbs,

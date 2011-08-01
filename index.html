@@ -9,15 +9,15 @@
         <meta name="author" content="Istvan Vincze">
         <meta name="viewport" content="width=device-width; initial-scale=1.0">
 
-        <link href='http://fonts.googleapis.com/css?family=Raleway:100&v2' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Raleway:100&v2" rel="stylesheet">
         <link rel="stylesheet" href="style.css?v=2">
 
         <script src="jquery.js"></script>
         <script src="imageviewer.jquery.js"></script>
-        
+
         <!--[if lt IE 9]>
-        <script src="selectivizr-min.js"></script>
-        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+            <script src="selectivizr-min.js"></script>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
     </head>
     
@@ -31,13 +31,13 @@
             <div>
 
                 <div class="image-viewer">
-                    <div>
-                        <a href="#" class="jiv-next">next</a> &middot;
-                        <a href="#" class="jiv-previous">previous</a> &middot;
-                        <a href="#" class="jiv-first">first</a> &middot;
-                        <a href="#" class="jiv-last">last</a>
+                    <div class="controls">
+                        <a href="#" class="first">first</a>
+                        <a href="#" class="previous">&laquo; previous</a>
+                        <a href="#" class="next">next &raquo;</a>
+                        <a href="#" class="last">last</a>
                     </div>
-                    
+
                     <ul>
                         <li><a href="images/abstract-q-c-640-480-7.jpg"><img src="images/abstract-q-c-640-480-7.jpg" alt="Alt text"></a></li>
                         <li><a href="images/animals-h-c-480-640-2.jpg"><img src="images/animals-h-c-480-640-2.jpg" alt="Alt text"></a></li>
@@ -45,11 +45,12 @@
                         <li><a href="images/food-h-c-480-640-1.jpg"><img src="images/food-h-c-480-640-1.jpg" alt="Alt text"></a></li>
                         <li><a href="images/nightlife-q-c-640-480-5.jpg"><img src="images/nightlife-q-c-640-480-5.jpg" alt="Alt text"></a></li>
                     </ul>
+
                     <figure></figure>
                 </div>
-                
+
                 <h2>Files</h2>
-                
+
                 <ul>
                     <li><a href="imageviewer.jquery.js">imageviewer.jquery.js</a></li>
                 </ul>
@@ -57,7 +58,6 @@
             </div>
 
         </div>
-        
 
 
         <script>

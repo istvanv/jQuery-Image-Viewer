@@ -104,6 +104,32 @@ h1 {
 /* --------- */
 
 
+.controls {
+    margin-bottom: 10px;
+    display: box;
+        display: -moz-box;
+        display: -webkit-box;
+    box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        -webkit-box-orient: horizontal;
+} .controls a {
+    padding: 0 10px;
+    text-decoration: none;
+    display: block;
+    box-flex: 0;
+        -moz-box-flex: 0;
+        -webkit-box-flex: 0;
+} .controls a:first-child,
+  .controls a:last-child {
+    padding: 0;
+    box-flex: 1;
+        -moz-box-flex: 1;
+        -webkit-box-flex: 1;
+} .controls a:last-child {
+    text-align: right;
+}
+
+
 .image-viewer {
     margin: 0 auto;
     width: 640px;
